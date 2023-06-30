@@ -43,8 +43,8 @@ def pdf_extract(filename):
         })
         elements = pd.concat([elements, element], ignore_index=True)
 
-        for x in range(int(item.bounding_box.x0 + point_density), int(item.bounding_box.x1), point_density):
-            for y in range(int(item.bounding_box.y0 + point_density), int(item.bounding_box.y1), point_density):
+        for x in range(int(item.bounding_box.x0), int(item.bounding_box.x1), point_density):
+            for y in range(int(item.bounding_box.y0), int(item.bounding_box.y1), point_density):
                 point = pd.DataFrame({
                     'index': [counter],
                     'element': [index],
@@ -76,8 +76,8 @@ def pdf_extract(filename):
     #     })
     #     index += 1
     #
-    #     for width in range(int(item.bounding_box.x0 + point_density), int(item.bounding_box.x1), point_density):
-    #         for height in range(int(item.bounding_box.y0 + point_density), int(item.bounding_box.y1), point_density):
+    #     for width in range(int(item.bounding_box.x0), int(item.bounding_box.x1), point_density):
+    #         for height in range(int(item.bounding_box.y0), int(item.bounding_box.y1), point_density):
     #             points.append([width, height])
     #             counter += 1
     # return elements, points, group_idx
@@ -117,8 +117,8 @@ def img_extract(filename):
             elements = pd.concat([elements, element], ignore_index=True)
 
             bounding = [list(item['position'][2].values()), list(item['position'][0].values())]
-            for x in range(int(bounding[0][0] + point_density), int(bounding[1][0]), point_density):
-                for y in range(int(bounding[0][1] + point_density), int(bounding[1][1]), point_density):
+            for x in range(int(bounding[0][0]), int(bounding[1][0]), point_density):
+                for y in range(int(bounding[0][1]), int(bounding[1][1]), point_density):
                     point = pd.DataFrame({
                         'index': [counter],
                         'element': [index],
@@ -162,8 +162,8 @@ def img_extract(filename):
         #         })
         #         index += 1
         #
-        #         for width in range(int(bounding[0][0] + point_density), int(bounding[1][0]), point_density):
-        #             for height in range(int(bounding[0][1] + point_density), int(bounding[1][1]), point_density):
+        #         for width in range(int(bounding[0][0]), int(bounding[1][0]), point_density):
+        #             for height in range(int(bounding[0][1]), int(bounding[1][1]), point_density):
         #                 points.append([width, -height])
         #                 counter += 1
         #     return elements, points, group_idx
