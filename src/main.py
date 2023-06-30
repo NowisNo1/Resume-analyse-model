@@ -1,14 +1,20 @@
 import os
 import re
+import time
+import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 from src.util.format_tools import cvt2pdf
 from src.util.text_extract import pdf_extract, img_extract
 from src.util.text_parser import dbscan
 
-FILENAME = '887'
-SUFFIX = 'docx'
-INPUT_PATH = str(Path('../res/' + FILENAME + '.' + SUFFIX).resolve())
+FILENAME = '100'
+SUFFIX = 'pdf'
+INPUT_FOLDER = 'D:/资源/ADriver/pdf/'
+# INPUT_PATH = str(Path('../res/' + FILENAME + '.' + SUFFIX).resolve())
+INPUT_PATH = str(Path('D:/资源/ADriver/pdf/' + FILENAME + '.' + SUFFIX).resolve())
+OUTPUT_CSV = []
+OUTPUT_SPLIT = ' '
 # INPUT_PATH = str(Path('D:/资源/ADriver/输出/docx/' + FILENAME + '.' + SUFFIX).resolve())
 FMT_DICT = {
     # doc
@@ -46,7 +52,7 @@ def file_fmt(path):
 
 
 def analyse_main():
-    global INPUT_PATH
+    global INPUT_PATH, OUTPUT_CSV
 
     print(f'# %15s:' % 'INPUT_FILE', INPUT_PATH,
           f'\n# %15s:' % 'TEMP_PATH', TEMP_PATH)
@@ -120,37 +126,73 @@ def analyse_main():
     if EXPORT_TO_FILE:
         # text
         with open('../output/' + SUFFIX + '_' + FILENAME + '.txt', 'w+', encoding='utf-8') as f:
-
             for name, group in _group:
                 for item in group.values:
-                    f.write(item[0] + '\n')
-                    print(item[0])
-                f.write('\n')
+                    f.write(item[0] + OUTPUT_SPLIT)
+                    # print(item[0])
+                f.write(2*OUTPUT_SPLIT)
         print('# %15s:' % 'TEXT SAVE TO', '../output/' + SUFFIX + '_' + FILENAME + '.txt')
         # rect
         # TODO
         print('# %15s:' % 'RECT SAVE TO', '../output/' + SUFFIX + '_' + FILENAME + '.txt')
         return '#SUCCESS'
-
     else:
         # text
-        str_text = ''
+        str_text = '"'
         for name, group in _group:
             for item in group.values:
-                str_text += item[0] + '\n'
-                print(item[0])
-            str_text += '\n'
+                str_text += item[0] + OUTPUT_SPLIT
+                # print(item[0])
+            str_text += 2*OUTPUT_SPLIT
+        str_text += '"'
+        OUTPUT_CSV.append([SUFFIX + '_' + FILENAME, str_text])
         # rect
         str_rect = ''
         # TODO
         return str_text, str_rect
 
+
 def run_single():
-    pass
+    analyse_main()
 
 def run_batch():
-    pass
+    start_s = time.time()
+    start_b = time.time()
+    end_t = time.time()
 
+    global INPUT_PATH, FILENAME, SUFFIX
+    folder_list = [INPUT_FOLDER]
+    file_list = []
+
+    while len(folder_list) > 0:
+        folder = folder_list.pop()
+        for i in os.listdir(folder):
+            filename, suffix = os.path.splitext(i)
+            if len(suffix) > 0:
+                file_list.append(folder + filename + suffix)
+            else:
+                folder_list.append(folder + filename + '/')
+            # print(file_list)
+            # print(folder_list)
+            # print()
+
+    start_b = time.time()
+    for i in range(len(file_list)):
+        start_t = time.time()
+        file = file_list[i]
+        INPUT_PATH = file
+        FILENAME, SUFFIX = os.path.splitext(file)
+        FILENAME = FILENAME.split('/')[-1]
+        SUFFIX = SUFFIX[1:]
+        # print(INPUT_PATH, FILENAME, SUFFIX)
+        analyse_main()
+        end_t = time.time()
+        print(f'\033[5;34m# PROGRESS: %4.0f/%4.0f with %3.2fs total %5.2fs\033[0m'
+              % (i+1, len(file_list),
+                 end_t-start_s,
+                 end_t-start_b))
+
+    np.savetxt('../output/resume_text.csv', OUTPUT_CSV, fmt='%s', delimiter=',')
 
 def rubbish_bin():
     pass
@@ -189,7 +231,9 @@ def rubbish_bin():
 
 
 if __name__ == '__main__':
-    analyse_main()
+    # run_single()
+
+    run_batch()
 
 
 
