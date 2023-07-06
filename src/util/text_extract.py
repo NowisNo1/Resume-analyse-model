@@ -82,6 +82,7 @@ def pdf_extract(filename):
     #             counter += 1
     # return elements, points, group_idx
 
+
 def img_extract(filename):
     elements = pd.DataFrame()
     points = pd.DataFrame()
@@ -169,4 +170,3 @@ def img_extract(filename):
         #     return elements, points, group_idx
         # except ValueError as e:
         #     print(e)
-

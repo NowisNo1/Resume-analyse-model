@@ -9,6 +9,7 @@ minPts = 5
 e = [15, 40]
 m = [ 1,  5]
 
+
 def dbscan(points):
     points_np = np.array(points.loc[:, 'x':'y'].values)
     chunk = DBSCAN(eps=eps, min_samples=minPts).fit_predict(points_np)
@@ -19,6 +20,7 @@ def dbscan(points):
     plt.show()
 
     return chunk
+
 
 def dbscan_multi(points):
     points_np = np.array(points)

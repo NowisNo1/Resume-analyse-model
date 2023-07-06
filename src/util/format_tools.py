@@ -5,6 +5,7 @@ app_doc = None
 app_ppt = None
 doc = None
 
+
 def cvt2pdf(path, fmt, output_path):
     global app_doc, app_ppt, doc
     if app_doc is None:
